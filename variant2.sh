@@ -5,6 +5,9 @@ while true; do
     echo "При помощью данной программы из указанного каталога можно сделать образ CD-диска в формате .iso"
     echo "Разработчик: Воронков Валентин группа 749-1"
 
+    echo "Текущее содержимое каталога"
+    ls -a
+
     echo "Укажите директорию содержания CD-диска"
     read dir
 
@@ -12,11 +15,13 @@ while true; do
     read name_file
 
     if [ -f "$name_file.iso" ]; then
-        name_file="$name_file-$(date +%d-%m-%Y).iso"
+        name_file="$name_file-$(date +%d-%m-%Y)"
     fi
 
-    genisoimage -o "$name_file" "$dir"
+    genisoimage -o "$name_file.iso" "$dir"
     echo "complete!"
+    echo "Обновлённое содержимое каталога"
+    ls -a
 
     echo "Повторить работу?"
     echo "y/n?"
