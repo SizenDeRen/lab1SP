@@ -1,26 +1,33 @@
 #include <stdio.h>
+#include <stdlib.h>
 
-int main() {
-    int n = 5; // длина массива
-    int a[] = {1, 2, 3, 4, 5}; // исходный массив
-    int sum = 0; // сумма квадратов элементов
+int main()
+{
+    const int size_mass = 15;
+    int mass[size_mass];
+    for (int i = 0; i < size_mass; i++)
+    {
+        mass[i] = rand() % 100;
+        printf("%d ", mass[i]);
+    }
 
-    asm ( // начало ассемблерной вставки
-        "movl $0, %%eax" // eax = 0
-        "movl %1, %%ecx" // ecx = адрес начала массива (переданного через переменную a)
-        "movl %2, %%edx" // edx = длина массива (переданного через переменную n)
-        "loop:\n"
-            "movl (%%ecx), %%ebx" // помещаем элемент массива в ebx
-            "imull %%ebx, %%ebx" // возводим элемент массива в квадрат
-            "addl %%ebx, %%eax" // добавляем полученное значение к сумме
-            "addl $4, %%ecx" // продвигаем указатель на следующий элемент массива
-        "loop loop" // повторяем цикл
-        : "=a" (sum) // выходное значение - сумма квадратов элементов
-        : "r" (a), "r" (n) // входные значения - адрес начала массива и его длина
-        : "eax", "ecx", "edx", "ebx" // перечисляем используемые регистры
-    );
-
-    printf("Sum of squares: %d", sum);
-
+    int sum_squared = 0;
+    int* ptr_mass = mass;
+    asm (
+            "movq %[ptr_mass], %%rax;"
+            "movl %[size_mass], %%ebx;"
+        "main_loop:"
+            "movl (%%rax), %%ecx;"
+            "imull %%ecx, %%ecx;"
+            "addl %%ecx, %[sum_squared];"
+            "addq $4, %%rax;"
+            "dec %%ebx;"
+            "jne main_loop;"
+            : [sum_squared] "+m" (sum_squared)
+            : [ptr_mass] "m" (ptr_mass), [size_mass] "m" (size_mass)
+            : "rax", "rbx", "rcx", "cc"
+        );
+    printf("\nSum of the squared elements of the array = %d
+", sum_squared);
     return 0;
 }
