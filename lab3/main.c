@@ -16,6 +16,9 @@ int main()
     asm (
             "movq %[ptr_mass], %%rax;"
             "movl %[size_mass], %%ebx;"
+            "xorl %%ecx, %%ecx;"
+            "movl (%%rax), %%edx;"
+            "xorl %%edi, %%edi;" 
         "main_loop:"
             "movl (%%rax), %%ecx;"
             "imull %%ecx, %%ecx;"
