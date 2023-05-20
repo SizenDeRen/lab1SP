@@ -27,7 +27,6 @@ int main()
             : [ptr_mass] "m" (ptr_mass), [size_mass] "m" (size_mass)
             : "rax", "rbx", "rcx", "cc"
         );
-    printf("\nSum of the squared elements of the array = %d
-", sum_squared);
+    printf("\nSum of the squared elements of the array = %d", sum_squared);
     return 0;
 }
