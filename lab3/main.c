@@ -16,23 +16,23 @@ int main() {
     int* ptr_mass = mass;
 
     asm (
-        "movq %[ptr_mass], %%rax\n"       // Загружаем адрес массива в регистр RAX
-        "movl %[size_mass], %%ecx\n"      // Загружаем размер массива в регистр ECX
-        "xorl %%edx, %%edx\n"             // Обнуляем регистр EDX для хранения суммы квадратов
+        "movq %[ptr_mass], %%rax\n"       
+        "movl %[size_mass], %%ecx\n"      
+        "xorl %%edx, %%edx\n"             
         "loop_start:\n"
-        "cmpl $0, %%ecx\n"                 // Проверяем, остались ли еще элементы массива
-        "je loop_end\n"                    // Если нет, переходим к концу цикла
-        "movl (%%rax), %%ebx\n"            // Загружаем значение элемента массива в регистр EBX
-        "imull %%ebx, %%ebx\n"             // Умножаем элемент на самого себя
-        "addl %%ebx, %%edx\n"              // Добавляем квадрат элемента к сумме
-        "addq $4, %%rax\n"                 // Переходим к следующему элементу массива
-        "subl $1, %%ecx\n"                 // Уменьшаем счетчик оставшихся элементов на 1
-        "jmp loop_start\n"                 // Переходим к началу цикла
+        "cmpl $0, %%ecx\n"                 
+        "je loop_end\n"                   
+        "movl (%%rax), %%ebx\n"           
+        "imull %%ebx, %%ebx\n"           
+        "addl %%ebx, %%edx\n"            
+        "addq $4, %%rax\n"                
+        "subl $1, %%ecx\n"                
+        "jmp loop_start\n"                
         "loop_end:\n"
-        "movl %%edx, %[sum]\n"             // Сохраняем сумму в выходную переменную
-        : [sum] "=m" (sum)                  // Выходной операнд - сумма квадратов
+        "movl %%edx, %[sum]\n"            
+        : [sum] "=m" (sum)                 
         : [ptr_mass] "m" (ptr_mass), [size_mass] "m" (size_mass)
-        : "%eax", "%ecx", "%edx", "%ebx"    // Регистры, которые используются в инлайн-ассемблере
+        : "%eax", "%ecx", "%edx", "%ebx"   
     );
 
     printf("The sum of squares is: %d\n", sum);
